@@ -59,34 +59,40 @@ Here are the instructions for setting up your project locally..
 To get a local running you may follow these simple steps.
 
 1. Install Environment Variables and create `.env` file
-   ```bash
+
+   ```sh
    npm i --save-dev dotenv
    ```
+
 2. Create this variables inside `.env`
-   ```bash
+
+   ```sh
    MONGO_URI=mongodb://127.0.0.1/{Your DataBase Name}
    API_PORT={Any Number}
    TOKEN_KEY={Random String}
    ```
+
 3. Inside `package.json` Change `"scripts"` to
+
    ```json
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js"
     }
    ```
+
 4. Start Server Application
-   ```bash
+
+   ```sh
    node index.js
    ```
 
 ## License
 
-Hassen Maoua
+Hassen Maoua - Gmail [hassenmaoua07@gmail.com](https://mail.google.com/mail/?view=cm&fs=1&to=hassenmaoua07@gmail.com&su=About+LMW+API)
 
 ---
 
 > LinkedIn [Hassen Maoua](https://linkedin.com/in/hassen-maoua-215683251) &nbsp;&middot;&nbsp;
 > GitHub [@hassenmaoua](https://github.com/hassenmaoua) &nbsp;&middot;&nbsp;
-> Gmail [hassenmaoua07@gmail.com](https://mail.google.com/mail/?view=cm&fs=1&to=hassenmaoua07@gmail.com&su=About+LMW+API)
 > Facebook [@hassen-maoua](https://facebook.com/hassen.maoua)
