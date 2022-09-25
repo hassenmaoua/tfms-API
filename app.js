@@ -20,6 +20,9 @@ app.use('/produit', produitRouter);
 const documentRouter = require('./routes/document');
 app.use('/document', documentRouter);
 
+const etatRouter = require('./routes/etat');
+app.use('/etat', etatRouter);
+
 // ************************
 
 module.exports = app;

@@ -67,4 +67,44 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// Updating One
+router.patch('/:id', auth, getClient, async (req, res) => {
+  if (req.body.intitule) {
+    res.client.intitule = req.body.intitule;
+  }
+
+  if (req.body.phone) {
+    res.client.phone = req.body.phone;
+  }
+
+  if (req.body.email) {
+    res.client.quantite = req.body.email;
+  }
+
+  if (req.body.identFiscale) {
+    res.client.bugetConsomme = req.body.identFiscale;
+  }
+
+  if (req.body.adresse) {
+    res.client.bugetVente = req.body.adresse;
+  }
+
+  try {
+    const updatedClient = await res.client.save();
+    res.json({ stats: true, message: 'Client Modifié', data: updatedClient });
+  } catch (err) {
+    res.status(400).json({ status: false, message: err.message });
+  }
+});
+
+// Deleting One
+router.delete('/:id', getClient, async (req, res) => {
+  try {
+    await res.client.remove();
+    res.json({ status: true, message: 'Client est Supprimé' });
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
+  }
+});
+
 module.exports = router;
