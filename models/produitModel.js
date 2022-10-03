@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 
 const produitSchema = new mongoose.Schema(
   {
-    _id: {
-      type: Number,
-      required: true,
-    },
+    _id: Number,
+
     intitule: {
       type: String,
       required: true,
@@ -13,6 +11,22 @@ const produitSchema = new mongoose.Schema(
     description: {
       type: String,
       default: 'Aucun Descriptions',
+    },
+
+    typeActivite: {
+      type: Object,
+
+      _id: Number,
+      code: String,
+      label: String,
+      style: String,
+
+      default: {
+        _id: 0,
+        code: '',
+        label: 'None',
+        style: '#000000',
+      },
     },
     quantite: {
       type: Number,
@@ -33,6 +47,17 @@ const produitSchema = new mongoose.Schema(
         .replace('/', '-')
         .replace('/', '-'),
     },
+
+    tempsEstime: {
+      type: Object,
+      temps: Number,
+      unit: String,
+
+      default: {
+        temps: 1,
+        unit: '',
+      },
+    },
     etat: {
       type: Object,
 
@@ -50,6 +75,11 @@ const produitSchema = new mongoose.Schema(
     },
 
     client: {
+      type: Object,
+      default: null,
+    },
+
+    responsable: {
       type: Object,
       default: null,
     },

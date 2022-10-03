@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
   },
   email: { type: String, unique: true },
   password: { type: String },
+  photo: {
+    type: String,
+    default: '',
+  },
   token: { type: String },
 });
 

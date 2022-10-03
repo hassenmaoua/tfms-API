@@ -4,7 +4,6 @@ const clientSchema = new mongoose.Schema(
   {
     _id: {
       type: Number,
-      required: true,
     },
     intitule: {
       type: String,
@@ -19,18 +18,24 @@ const clientSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    identFiscale: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     adresse: {
       type: String,
       default: '',
     },
-    isHuman: {
+
+    photo: {
+      type: String,
+      default: '',
+    },
+
+    isIndividual: {
       type: Boolean,
       default: false,
+    },
+
+    cCreator: {
+      type: Object,
+      default: null,
     },
   },
   {

@@ -1,7 +1,10 @@
 const express = require('express');
+const http = require('http');
 const router = express.Router();
 const Produit = require('../models/produitModel');
 const auth = require('../middleware/authentication');
+
+const User = require('../models/userModel');
 
 // Getting all
 router.get('/list', auth, async (req, res) => {
@@ -48,13 +51,19 @@ async function getProduit(req, res, next) {
 
 // Creating one
 router.post('/', auth, async (req, res) => {
+  const id = Math.floor(Date.now() / 1000) - 1664537147;
+
+  const responsable = req.session.userid;
+
   const produit = new Produit({
-    _id: req.body._id,
+    _id: id,
     intitule: req.body.intitule,
-    description: req.body.description,
-    quantite: req.body.quantite,
-    bugetConsomme: req.body.bugetConsomme,
     bugetVente: req.body.bugetVente,
+    typeActivite: req.body.typeActivite,
+    quantite: req.body.quantite,
+    tempsEstime: req.body.tempsEstime,
+    client: req.body.client,
+    responsable: responsable,
   });
   try {
     const newProduit = await produit.save();
@@ -86,6 +95,18 @@ router.patch('/:id', auth, getProduit, async (req, res) => {
 
   if (req.body.bugetVente) {
     res.produit.bugetVente = req.body.bugetVente;
+  }
+
+  if (req.body.tempsEstime) {
+    res.produit.tempsEstime = req.body.tempsEstime;
+  }
+
+  if (req.body.typeActivite) {
+    res.produit.typeActivite = req.body.typeActivite;
+  }
+
+  if (req.body.client) {
+    res.produit.client = req.body.client;
   }
 
   try {

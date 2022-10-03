@@ -53,9 +53,9 @@ router.post('/', auth, async (req, res) => {
     intitule: req.body.intitule,
     phone: req.body.phone,
     email: req.body.email,
-    identFiscale: req.body.identFiscale,
     adresse: req.body.adresse,
-    isHuman: req.body.isHuman,
+    isIndividual: req.body.isIndividual,
+    cCreator: req.session.userid,
   });
   try {
     const newClient = await client.save();
@@ -69,6 +69,10 @@ router.post('/', auth, async (req, res) => {
 
 // Updating One
 router.patch('/:id', auth, getClient, async (req, res) => {
+  if (req.body._id) {
+    res.client._id = req.body._id;
+  }
+
   if (req.body.intitule) {
     res.client.intitule = req.body.intitule;
   }
@@ -78,15 +82,11 @@ router.patch('/:id', auth, getClient, async (req, res) => {
   }
 
   if (req.body.email) {
-    res.client.quantite = req.body.email;
-  }
-
-  if (req.body.identFiscale) {
-    res.client.bugetConsomme = req.body.identFiscale;
+    res.client.email = req.body.email;
   }
 
   if (req.body.adresse) {
-    res.client.bugetVente = req.body.adresse;
+    res.client.adresse = req.body.adresse;
   }
 
   try {
