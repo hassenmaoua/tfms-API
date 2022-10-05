@@ -2,6 +2,36 @@ const express = require('express');
 const router = express.Router();
 const Client = require('../models/clientModel');
 const auth = require('../middleware/authentication');
+const fs = require('fs');
+
+let multer = require('multer'),
+  uuidv4 = require('uuid/v4');
+
+const DIR = './public/';
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DIR);
+  },
+  filename: (req, file, cb) => {
+    const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    cb(null, uuidv4() + '-' + fileName);
+  },
+});
+var upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == 'image/png' ||
+      file.mimetype == 'image/jpg' ||
+      file.mimetype == 'image/jpeg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+    }
+  },
+});
 
 // Getting all
 router.get('/list', auth, async (req, res) => {
@@ -47,23 +77,32 @@ async function getClient(req, res, next) {
 }
 
 // Creating one
-router.post('/', auth, async (req, res) => {
-  const client = new Client({
-    _id: req.body._id,
-    intitule: req.body.intitule,
-    phone: req.body.phone,
-    email: req.body.email,
-    adresse: req.body.adresse,
-    isIndividual: req.body.isIndividual,
-    cCreator: req.session.userid,
-  });
+router.post('/', auth, upload.single('photo'), async (req, res) => {
   try {
+    let url = '';
+    if (req.file) {
+      url =
+        req.protocol + '://' + req.get('host') + '/public/' + req.file.filename;
+    } else {
+      url = req.photo;
+    }
+
+    const client = new Client({
+      _id: req.body._id,
+      intitule: req.body.intitule,
+      phone: req.body.phone,
+      email: req.body.email,
+      adresse: req.body.adresse,
+      isIndividual: req.body.isIndividual,
+      cCreator: req.user.data,
+      photo: url,
+    });
     const newClient = await client.save();
     res
       .status(201)
       .json({ stats: true, message: 'Client ajouté', data: newClient });
   } catch (err) {
-    res.status(400).json({ stats: false, message: err.message });
+    console.log(err.message);
   }
 });
 
@@ -89,6 +128,10 @@ router.patch('/:id', auth, getClient, async (req, res) => {
     res.client.adresse = req.body.adresse;
   }
 
+  if (req.body.photo) {
+    res.client.photo = { path: req.body.photo };
+  }
+
   try {
     const updatedClient = await res.client.save();
     res.json({ stats: true, message: 'Client Modifié', data: updatedClient });
@@ -99,6 +142,12 @@ router.patch('/:id', auth, getClient, async (req, res) => {
 
 // Deleting One
 router.delete('/:id', getClient, async (req, res) => {
+  const dirr = req.protocol + '://' + req.get('host') + '/';
+
+  try {
+    fs.unlinkSync(res.client.photo.replace(dirr, ''));
+  } catch {}
+
   try {
     await res.client.remove();
     res.json({ status: true, message: 'Client est Supprimé' });

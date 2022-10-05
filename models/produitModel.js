@@ -33,11 +33,11 @@ const produitSchema = new mongoose.Schema(
       default: 1,
     },
     bugetConsomme: {
-      type: Number,
+      type: String,
       default: 0,
     },
     bugetVente: {
-      type: Number,
+      type: String,
       default: 0,
     },
     dateCreation: {

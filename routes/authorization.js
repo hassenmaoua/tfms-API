@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/authentication');
 
+// Get User by EMAIL
 router.get('/getbyemail/:email', auth, async (req, res) => {
   try {
     const email = req.params['email'];
@@ -25,6 +26,7 @@ router.get('/getbyemail/:email', auth, async (req, res) => {
     res.status(500).json({ status: false, message: err.message });
   }
 });
+
 // Login
 router.post('/login', async (req, res) => {
   try {
@@ -38,35 +40,63 @@ router.post('/login', async (req, res) => {
       });
     } else {
       // Validate if user exist in our database
-      const user = await User.findOne({ email });
+      const foundUser = await User.findOne({ email });
 
-      if (user && (await password) === user.password) {
+      if (foundUser && (await password) === foundUser.password) {
         // Create token
-        const token = jwt.sign(
-          { user_id: user._id, email },
+        const accessToken = jwt.sign(
+          {
+            user_id: foundUser._id,
+            email,
+          },
           process.env.TOKEN_KEY,
           {
-            expiresIn: '2h',
+            expiresIn: '60s',
+          }
+        );
+        const refreshToken = jwt.sign(
+          {
+            data: {
+              _id: foundUser._id,
+              label: foundUser.nom + ' ' + foundUser.prenom,
+            },
+            profile: {
+              _id: foundUser._id,
+              nom: foundUser.nom,
+              prenom: foundUser.prenom,
+              email: foundUser.email,
+              photo: foundUser.photo,
+            },
+          },
+
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: '1d',
           }
         );
 
         // save user token
-        user.token = token;
+        var currentUser = await User.findById(foundUser._id);
+        currentUser.refreshToken = refreshToken;
+        const updatedUser = await currentUser.save();
 
         var session = req.session;
         session.userid = {
-          nom: user.nom,
-          prenom: user.prenom,
-          email: user.email,
+          nom: foundUser.nom,
+          prenom: foundUser.prenom,
+          email: foundUser.email,
         };
-
         // user
-        res.status(200).json({
-          status: true,
-          message: 'Connecté',
-          session: session,
-          data: user,
-        });
+        return res
+          .cookie('jwt', refreshToken, {
+            maxAge: 24 * 60 * 60 * 1000,
+          })
+          .status(200)
+          .json({
+            status: true,
+            message: 'Connecté',
+            accessToken: refreshToken,
+          });
       } else {
         res.status(400).json({
           status: false,
@@ -84,13 +114,65 @@ router.post('/login', async (req, res) => {
   // Our register logic ends here
 });
 
-router.get('/logout', async (req, res) => {
+router.get('/refresh', async (req, res) => {
   try {
-    req.session.destroy();
-    res.status(200).json({ message: 'Deconnecter', seesion: req.session });
+    const cookies = req.cookies;
+
+    const refreshToken = cookies.jwt;
+
+    const foundUser = await User.findOne({ refreshToken });
+
+    if (!foundUser) {
+      return res.sendStatus(403);
+    }
+
+    jwt.verify(refreshToken, process.env.TOKEN_KEY, (err, decoded) => {
+      if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
+      const accessToken = jwt.sign(
+        {
+          user_id: foundUser._id,
+        },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: '60s',
+        }
+      );
+      res.json({ accessToken });
+    });
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+router.get('/logout', async (req, res) => {
+  // On client, also delete the accessToken
+  try {
+    const cookies = req.cookies;
+
+    if (!cookies?.jwt) return res.status(204); //No Content Successful request
+    const refreshToken = cookies.jwt;
+
+    const foundUser = await User.findOne({ refreshToken });
+
+    if (!foundUser) {
+      res.clearCookie('jwt', { httpOnly: false });
+      return res.sendStatus(204);
+    }
+
+    var currentUser = await User.findById(foundUser._id);
+    currentUser.refreshToken = '';
+    const updatedUser = await currentUser.save();
+
+    res.clearCookie('jwt', { httpOnly: false }); // secure: true - only servers on https
+    return res.sendStatus(204);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
+router.get('/user', auth, async (req, res) => {
+  if (req.user) res.status(200).send(req.user.profile);
+  else res.status(404).send({ message: 'No profile found' });
 });
 
 module.exports = router;

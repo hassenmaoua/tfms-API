@@ -53,8 +53,6 @@ async function getProduit(req, res, next) {
 router.post('/', auth, async (req, res) => {
   const id = Math.floor(Date.now() / 1000) - 1664537147;
 
-  const responsable = req.session.userid;
-
   const produit = new Produit({
     _id: id,
     intitule: req.body.intitule,
@@ -63,7 +61,7 @@ router.post('/', auth, async (req, res) => {
     quantite: req.body.quantite,
     tempsEstime: req.body.tempsEstime,
     client: req.body.client,
-    responsable: responsable,
+    responsable: req.user.data,
   });
   try {
     const newProduit = await produit.save();
