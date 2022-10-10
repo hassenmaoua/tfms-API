@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { LOCAL_URI } = process.env;
 
 const uri =
-  'mongodb+srv://user:user123@cluster0.0kfdzhh.mongodb.net/?retryWrites=true&w=majority';
+  'mongodb+srv://user:user123@cluster0.0kfdzhh.mongodb.net/LatheMill?retryWrites=true&w=majority';
 
 exports.connect = () => {
   // Connecting to the database
