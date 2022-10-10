@@ -1,0 +1,16 @@
+name: Create releases
+on:
+  release:
+    types: [published]
+jobs:
+  update-heroku-env-variable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Trim tag name
+        run: echo '::set-env name=API_VERSION::${{ github.ref }}'
+      - name: Update API_VERSION on Heroku
+        run: heroku config:set API_VERSION=${API_VERSION##*/} -a ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
