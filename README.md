@@ -4,7 +4,8 @@
 
 <p align="center">
   <a href="#about-the-project">About The Project</a> •
-  <a href="#installation">Installation</a> •
+  <a href="#installation">Installation</a> 
+  <a href="#modules">Modules</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#license">License</a>
 </p>
@@ -33,25 +34,25 @@ git clone https://github.com/hassenmaoua/LMW-API
 cd LMW-API
 ```
 
-- Initialize project
+- Install Dependencies and `node_modules`
 
 ```bash
-npm init -y
+npm install
 ```
 
-- Install Dependencies
-
-```bash
-npm install express mongoose nodemon jsonwebtoken
-```
+## Modules
 
 > `express` : [Express](https://expressjs.com/) is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 
 > `mongoose` : [Mongoose](https://mongoosejs.com/) is a Node. js-based Object Data Modeling (ODM) library for MongoDB.
 
-> `nodemon` : [Nodemon](https://www.npmjs.com/package/nodemon) is for restarting automatically the application when file changes in the directory are detected.
-
 > `jsonwebtoken` : [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken) is an open standard for securely transferring data within parties using a JSON object.
+
+> `cookie-parser` : [Cookie Parser](https://www.npmjs.com/package/cookie-parser) is a middleware which parses cookies attached to the client request object.
+
+> `cors` : [Cookie Parser](https://www.npmjs.com/package/cors) is a package for providing a Connect/Express middleware that can be used to enable CORS with various options
+
+> `multer` : [Multer](https://www.npmjs.com/package/multer) is a node. js middleware for handling multipart/form-data , which is primarily used for uploading files
 
 ## How To Use
 

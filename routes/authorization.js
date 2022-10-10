@@ -3,9 +3,10 @@ const router = express.Router();
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/authentication');
+const { TOKEN_KEY } = process.env;
 
 // Get User by EMAIL
-router.get('/getbyemail/:email', auth, async (req, res) => {
+router.get('/getbyemail/:email', async (req, res) => {
   try {
     const email = req.params['email'];
     const user = await User.findOne({ email });
@@ -32,80 +33,80 @@ router.post('/login', async (req, res) => {
   try {
     // Get user input
     const { email, password } = req.body;
-    // Validate user input
-    if (!(email && password)) {
-      res.status(400).json({
+
+    // Validate user email
+    if (!email) {
+      return res.status(400).send({
         status: false,
-        message: "La saisie d'email et du mot de passe est obligatoire",
+        message: "La saisie d'email est obligatoire",
       });
-    } else {
-      // Validate if user exist in our database
-      const foundUser = await User.findOne({ email });
+    }
 
-      if (foundUser && (await password) === foundUser.password) {
-        // Create token
-        const accessToken = jwt.sign(
-          {
-            user_id: foundUser._id,
-            email,
+    // Validate user password
+    if (!password) {
+      return res.status(400).send({
+        status: false,
+        message: 'La saisie du mot de passe est obligatoire',
+      });
+    }
+
+    const foundUser = await User.findOne({ email });
+
+    // Validate if user exist in our database
+    if (!foundUser) {
+      return res.status(404).send({
+        status: false,
+        message: "Email n'existe pas",
+      });
+    }
+
+    // Validate if password is correct
+    if (password != foundUser.password) {
+      return res.status(406).send({
+        status: false,
+        message: 'Mot de passe incorrect',
+      });
+    }
+
+    if (password === foundUser.password) {
+      // Create token
+      const accessToken = jwt.sign(
+        {
+          data: {
+            _id: foundUser._id,
+            label: foundUser.nom + ' ' + foundUser.prenom,
           },
-          process.env.TOKEN_KEY,
-          {
-            expiresIn: '60s',
-          }
-        );
-        const refreshToken = jwt.sign(
-          {
-            data: {
-              _id: foundUser._id,
-              label: foundUser.nom + ' ' + foundUser.prenom,
-            },
-            profile: {
-              _id: foundUser._id,
-              nom: foundUser.nom,
-              prenom: foundUser.prenom,
-              email: foundUser.email,
-              photo: foundUser.photo,
-            },
+          profile: {
+            _id: foundUser._id,
+            nom: foundUser.nom,
+            prenom: foundUser.prenom,
+            email: foundUser.email,
+            photo: foundUser.photo,
           },
+        },
+        TOKEN_KEY,
+        { expiresIn: '1d' }
+      );
 
-          process.env.TOKEN_KEY,
-          {
-            expiresIn: '1d',
-          }
-        );
+      // save user token
+      var currentUser = await User.findById(foundUser._id);
+      currentUser.refreshToken = accessToken;
+      await currentUser.save();
 
-        // save user token
-        var currentUser = await User.findById(foundUser._id);
-        currentUser.refreshToken = refreshToken;
-        const updatedUser = await currentUser.save();
-
-        var session = req.session;
-        session.userid = {
-          nom: foundUser.nom,
-          prenom: foundUser.prenom,
-          email: foundUser.email,
-        };
-        // user
-        return res
-          .cookie('jwt', refreshToken, {
-            maxAge: 24 * 60 * 60 * 1000,
-          })
-          .status(200)
-          .json({
-            status: true,
-            message: 'Connecté',
-            accessToken: refreshToken,
-          });
-      } else {
-        res.status(400).json({
-          status: false,
-          message: "Informations d'identification non valides",
+      // user
+      return res
+        .status(200)
+        .cookie('jwt', accessToken, {
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .send({
+          status: true,
+          message: 'Connecté',
+          accessToken: accessToken,
         });
-      }
     }
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       status: false,
       message: err.message,
     });
@@ -118,29 +119,46 @@ router.get('/refresh', async (req, res) => {
   try {
     const cookies = req.cookies;
 
+    if (!cookies?.jwt)
+      return res
+        .status(401)
+        .send({ message: 'No Cookies, Invalid Authorization' });
+
     const refreshToken = cookies.jwt;
 
     const foundUser = await User.findOne({ refreshToken });
-
     if (!foundUser) {
-      return res.sendStatus(403);
+      return res.status(404).send({ message: 'User not found' });
     }
 
-    jwt.verify(refreshToken, process.env.TOKEN_KEY, (err, decoded) => {
-      if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
+    res.json({ status: true, accessToken: refreshToken });
+
+    /*
+    jwt.verify(refreshToken, TOKEN_KEY, (err, decoded) => {
+      if (err || foundUser.email !== decoded.profile.email)
+        return res.status(403).send({ message: 'User not match' });
       const accessToken = jwt.sign(
         {
-          user_id: foundUser._id,
+          data: {
+            _id: foundUser._id,
+            label: foundUser.nom + ' ' + foundUser.prenom,
+          },
+          profile: {
+            _id: foundUser._id,
+            nom: foundUser.nom,
+            prenom: foundUser.prenom,
+            email: foundUser.email,
+            photo: foundUser.photo,
+          },
         },
-        process.env.TOKEN_KEY,
+        TOKEN_KEY,
         {
-          expiresIn: '60s',
+          expiresIn: '10s',
         }
       );
-      res.json({ accessToken });
-    });
+      });*/
   } catch (err) {
-    res.status(401).send(err.message);
+    res.status(401).send({ message: err.message });
   }
 });
 
@@ -149,21 +167,20 @@ router.get('/logout', async (req, res) => {
   try {
     const cookies = req.cookies;
 
-    if (!cookies?.jwt) return res.status(204); //No Content Successful request
+    if (!cookies?.jwt) return res.sendStatus(204); //No Content Successful request
     const refreshToken = cookies.jwt;
 
     const foundUser = await User.findOne({ refreshToken });
 
     if (!foundUser) {
-      res.clearCookie('jwt', { httpOnly: false });
+      res.clearCookie('jwt');
       return res.sendStatus(204);
     }
 
-    var currentUser = await User.findById(foundUser._id);
-    currentUser.refreshToken = '';
-    const updatedUser = await currentUser.save();
+    foundUser.refreshToken = '';
+    await foundUser.save();
+    res.clearCookie('jwt'); // secure: true - only servers on https
 
-    res.clearCookie('jwt', { httpOnly: false }); // secure: true - only servers on https
     return res.sendStatus(204);
   } catch (err) {
     res.status(500).json({ message: err.message });

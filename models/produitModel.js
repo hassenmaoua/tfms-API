@@ -24,7 +24,7 @@ const produitSchema = new mongoose.Schema(
       default: {
         _id: 0,
         code: '',
-        label: 'None',
+        label: 'Aucun',
         style: '#000000',
       },
     },
@@ -34,11 +34,11 @@ const produitSchema = new mongoose.Schema(
     },
     bugetConsomme: {
       type: String,
-      default: 0,
+      default: '0 TND',
     },
     bugetVente: {
       type: String,
-      default: 0,
+      default: '0 TND',
     },
     dateCreation: {
       type: String,
@@ -66,12 +66,7 @@ const produitSchema = new mongoose.Schema(
       label: String,
       style: String,
 
-      default: {
-        _id: 0,
-        code: 'ET000',
-        label: 'Nouveau',
-        style: '#00FF00',
-      },
+      default: { _id: 1 },
     },
 
     client: {

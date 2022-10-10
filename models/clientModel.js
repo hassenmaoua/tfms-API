@@ -9,6 +9,10 @@ const clientSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    identifiantFiscal: {
+      type: String,
+      default: '',
+    },
     phone: {
       type: String,
       required: true,

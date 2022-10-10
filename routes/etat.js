@@ -28,18 +28,14 @@ router.get('/list', auth, async (req, res) => {
 
 router.get('/list/:code', auth, async (req, res) => {
   try {
-    const etatsList = await Etat.find();
-
     const code = req.params['code'];
+    const etatsList = await Etat.find({ code });
 
-    const filteredList = etatsList.filter((etat) => {
-      return etat.code.includes(code);
-    });
-    if (filteredList.length > 0) {
+    if (etatsList.length > 0) {
       res.status(200).json({
         status: true,
         message: 'Succes',
-        data: filteredList,
+        data: etatsList,
       });
     } else {
       res.status(404).json({
@@ -61,7 +57,7 @@ async function getEtat(req, res, next) {
   let etat;
   try {
     etat = await Etat.findById(req.params.id);
-    if (etat == null) {
+    if (!etat) {
       return res.status(404).json({ stats: false, message: 'Etat non trouvé' });
     }
   } catch (err) {
@@ -83,7 +79,7 @@ router.post('/', auth, async (req, res) => {
   try {
     const newEtat = await etat.save();
     res
-      .status(201)
+      .status(200)
       .json({ stats: true, message: 'Etat ajouté', data: newEtat });
   } catch (err) {
     res.status(400).json({ stats: false, message: err.message });
@@ -92,6 +88,10 @@ router.post('/', auth, async (req, res) => {
 
 // Updating One
 router.patch('/:id', auth, getEtat, async (req, res) => {
+  if (req.body._id) {
+    res.etat._id = req.body._id;
+  }
+
   if (req.body.code) {
     res.etat.code = req.body.code;
   }
@@ -106,7 +106,9 @@ router.patch('/:id', auth, getEtat, async (req, res) => {
 
   try {
     const updatedEtat = await res.etat.save();
-    res.json({ stats: true, message: 'Etat Modifié', data: updatedEtat });
+    res
+      .status(200)
+      .json({ stats: true, message: 'Etat Modifié', data: updatedEtat });
   } catch (err) {
     res.status(400).json({ status: false, message: err.message });
   }
@@ -116,7 +118,7 @@ router.patch('/:id', auth, getEtat, async (req, res) => {
 router.delete('/:id', getEtat, async (req, res) => {
   try {
     await res.etat.remove();
-    res.json({ status: true, message: 'Etat est Supprimé' });
+    res.status(201).json({ status: true, message: 'Etat est Supprimé' });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
