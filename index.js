@@ -1,11 +1,11 @@
 require('dotenv').config();
 require('./config/database').connect();
 
-const { API_PORT } = process.env;
+const port = process.env.API_PORT || 5000;
 
 const app = require('./app');
 
-app.listen(API_PORT, () => {
+app.listen(port, () => {
   console.log('You can use lathe-mill-workshop API in your APP.\n');
-  console.log(`\tLocal: http://127.0.0.1:${API_PORT}\n`);
+  process.env.API_PORT && console.log(`\tLocal: http://127.0.0.1:${port}\n`);
 });
