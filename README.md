@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="#about-the-project">About The Project</a> •
-  <a href="#installation">Installation</a> 
+  <a href="#installation">Installation</a> •
   <a href="#modules">Modules</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#license">License</a>
