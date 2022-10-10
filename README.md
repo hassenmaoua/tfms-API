@@ -52,7 +52,7 @@ npm install
 
 > `cors` : [Cookie Parser](https://www.npmjs.com/package/cors) is a package for providing a Connect/Express middleware that can be used to enable CORS with various options
 
-> `multer` : [Multer](https://www.npmjs.com/package/multer) is a node. js middleware for handling multipart/form-data , which is primarily used for uploading files
+> `multer` : [Multer](https://www.npmjs.com/package/multer) is a middleware for handling multipart/form-data , which is primarily used for uploading files
 
 ## How To Use
 
