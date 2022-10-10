@@ -16,6 +16,10 @@ app.use(
 
 // ************************ Logic goes here
 
+app.get('/check', (req, res) => {
+  res.status(200).send('It Works!!!!!');
+});
+
 const uploadRouter = require('./routes/upload');
 app.use('/api/public', uploadRouter);
 
