@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
@@ -75,6 +76,7 @@ router.post('/login', async (req, res) => {
           data: {
             _id: foundUser._id,
             label: foundUser.nom + ' ' + foundUser.prenom,
+            identifiantFiscal: foundUser.identifiantFiscal,
           },
           profile: {
             _id: foundUser._id,
@@ -159,6 +161,31 @@ router.get('/refresh', async (req, res) => {
       });*/
   } catch (err) {
     res.status(401).send({ message: err.message });
+  }
+});
+
+router.post('/verify', async (req, res) => {
+  try {
+    const refreshToken = req.body.jwt;
+
+    if (!refreshToken)
+      return res
+        .status(401)
+        .send({ message: 'No Token, Invalid Authorization' });
+
+    const foundUser = await User.findOne({ refreshToken });
+    if (!foundUser) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    jwt.verify(refreshToken, TOKEN_KEY, (err, decoded) => {
+      if (err || foundUser.email !== decoded.profile.email)
+        return res.status(403).send({ message: 'User not match' });
+    });
+
+    res.status(201);
+  } catch (err) {
+    res.json({ message: err.message });
   }
 });
 

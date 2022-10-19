@@ -1,5 +1,4 @@
 const express = require('express');
-const http = require('http');
 const router = express.Router();
 const Produit = require('../models/produitModel');
 const Client = require('../models/clientModel');
@@ -110,7 +109,6 @@ async function getProduit(req, res, next) {
         await produit.save();
       }
     }
-    console.log(produit);
   } catch (err) {
     return res.status(500).json({ stats: false, message: err.message });
   }

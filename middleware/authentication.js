@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const config = process.env;
+const { TOKEN_KEY } = process.env;
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -12,7 +13,7 @@ const verifyToken = (req, res, next) => {
     });
   }
   try {
-    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    const decoded = jwt.verify(token, TOKEN_KEY);
     req.user = decoded;
   } catch (err) {
     return res.status(401).json({

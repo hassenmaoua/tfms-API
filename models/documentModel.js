@@ -6,10 +6,17 @@ const documentSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    dopiece: {
+
+    intitule: {
       type: String,
+      default: '',
+    },
+
+    dopiece: {
+      type: Number,
       required: true,
     },
+
     dateDoc: {
       type: String,
       default: new Date(Date.now())
@@ -18,7 +25,7 @@ const documentSchema = new mongoose.Schema(
         .replace('/', '-'),
     },
 
-    article: {
+    articles: {
       type: Array,
 
       _id: {
@@ -42,20 +49,18 @@ const documentSchema = new mongoose.Schema(
     },
 
     montantHT: {
-      type: String,
-      required: true,
-    },
-    montantNetHT: {
-      type: String,
-      required: true,
+      type: Number,
     },
     montantTVA: {
-      type: String,
-      required: true,
+      type: Number,
+      default: 0,
+    },
+    remise: {
+      type: Number,
+      default: 0,
     },
     montantTTC: {
-      type: String,
-      required: true,
+      type: Number,
     },
     etat: {
       type: Object,
@@ -66,8 +71,8 @@ const documentSchema = new mongoose.Schema(
       style: String,
 
       default: {
-        _id: 0,
-        code: 'ET000',
+        _id: 10,
+        code: 'ETD',
         label: 'Nouveau',
         style: '#00FF00',
       },
@@ -75,9 +80,7 @@ const documentSchema = new mongoose.Schema(
 
     client: {
       type: Object,
-
       default: null,
-
       _id: {
         type: Number,
         required: true,
@@ -86,14 +89,18 @@ const documentSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      phone: {
-        type: Number,
-        required: true,
-      },
       identFiscale: {
         type: String,
         required: true,
       },
+      adresse: {
+        type: String,
+        required: true,
+      },
+    },
+
+    docCreateur: {
+      type: Object,
     },
   },
   {

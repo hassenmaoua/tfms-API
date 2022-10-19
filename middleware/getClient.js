@@ -1,17 +1,12 @@
 const Client = require('../models/clientModel');
 
 const getClient = async (req, res, next) => {
-  let client;
-  if (!req.body.client) {
-    if (res.produit) {
-      res.produit.client = '';
+  try {
+    if (!req.body.client) {
       return next();
     }
-    return next();
-  }
 
-  try {
-    client = await Client.findById(req.body.client);
+    const client = await Client.findById(req.body.client);
     if (!client) {
       return next();
     }

@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
-const { LOCAL_URI } = process.env;
-
-const uri =
-  'mongodb+srv://user:user123@cluster0.0kfdzhh.mongodb.net/LatheMill?retryWrites=true&w=majority';
+require('dotenv').config();
+const { URI } = process.env;
 
 exports.connect = () => {
   // Connecting to the database
   mongoose
-    .connect(uri, {
+    .connect(URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })

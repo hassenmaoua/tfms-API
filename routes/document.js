@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const Client = require('../models/clientModel');
+const getClient = require('../middleware/getClient');
+const getEtat = require('../middleware/getEtat');
 const Document = require('../models/documentModel');
 const auth = require('../middleware/authentication');
 
@@ -11,7 +14,7 @@ router.get('/list', auth, async (req, res) => {
       res.status(200).json({
         status: true,
         message: 'Succes',
-        data: documentsList,
+        data: documentsList.reverse(),
       });
     } else {
       res.status(404).json({
@@ -47,17 +50,29 @@ async function getDocument(req, res, next) {
 }
 
 // Creating one
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, getEtat, async (req, res) => {
+  if (req.body.client) {
+    const client = await Client.findById(req.body.client);
+    req.body.client = {
+      _id: client._id,
+      intitule: client.intitule,
+      identifiantFiscal: client.identifiantFiscal,
+      adresse: client.adresse,
+    };
+  }
+
   const document = new Document({
     _id: req.body._id,
+    intitule: req.body.intitule,
     dopiece: req.body.dopiece,
     dateDoc: req.body.dateDoc,
-    article: req.body.article,
+    articles: req.body.articles,
     montantHT: req.body.montantHT,
-    montantNetHT: req.body.montantNetHT,
     montantTVA: req.body.montantTVA,
+    remise: req.body.remise,
     montantTTC: req.body.montantTTC,
     client: req.body.client,
+    docCreateur: req.user.data,
   });
   try {
     const newDocument = await document.save();
