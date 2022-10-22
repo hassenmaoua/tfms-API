@@ -63,6 +63,28 @@ router.get('/list', auth, async (req, res) => {
   }
 });
 
+router.get('/list-by-client/:client', auth, async (req, res) => {
+  const client = Number(req.params['client']);
+  let produitsList;
+  try {
+    produitsList = await Produit.find({ client: { _id: client } });
+    if (produitsList.length > 0) {
+      res.status(200).json({
+        status: true,
+        message: 'Succes',
+        data: produitsList.reverse(),
+      });
+    } else {
+      res.status(404).json({
+        status: false,
+        message: 'Aucun donnée disponible',
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
+  }
+});
+
 // Getting One
 router.get('/:id', auth, getProduit, (req, res) => {
   res.json({ status: true, message: 'succes', data: res.produit });

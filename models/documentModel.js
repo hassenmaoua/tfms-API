@@ -27,38 +27,27 @@ const documentSchema = new mongoose.Schema(
 
     articles: {
       type: Array,
-
-      _id: {
-        type: Number,
-        required: true,
-      },
-      intitule: {
-        type: String,
-        required: true,
-      },
-      quantite: {
-        type: Number,
-        required: true,
-      },
-      bugetVente: {
-        type: Number,
-        required: true,
-      },
-
       default: [],
     },
 
     montantHT: {
       type: Number,
     },
+
     montantTVA: {
       type: Number,
       default: 0,
     },
-    remise: {
+
+    TVA: {
       type: Number,
       default: 0,
     },
+    timber: {
+      type: Number,
+      default: 0,
+    },
+
     montantTTC: {
       type: Number,
     },
@@ -81,22 +70,6 @@ const documentSchema = new mongoose.Schema(
     client: {
       type: Object,
       default: null,
-      _id: {
-        type: Number,
-        required: true,
-      },
-      intitule: {
-        type: String,
-        required: true,
-      },
-      identFiscale: {
-        type: String,
-        required: true,
-      },
-      adresse: {
-        type: String,
-        required: true,
-      },
     },
 
     docCreateur: {

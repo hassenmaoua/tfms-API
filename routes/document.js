@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Client = require('../models/clientModel');
-const getClient = require('../middleware/getClient');
-const getEtat = require('../middleware/getEtat');
 const Document = require('../models/documentModel');
+const getEtat = require('../middleware/getEtat');
 const auth = require('../middleware/authentication');
 
 // Getting all
@@ -51,25 +50,18 @@ async function getDocument(req, res, next) {
 
 // Creating one
 router.post('/', auth, getEtat, async (req, res) => {
-  if (req.body.client) {
-    const client = await Client.findById(req.body.client);
-    req.body.client = {
-      _id: client._id,
-      intitule: client.intitule,
-      identifiantFiscal: client.identifiantFiscal,
-      adresse: client.adresse,
-    };
-  }
+  const id = Math.floor(Date.now() / 1000) - 1665349465;
 
   const document = new Document({
-    _id: req.body._id,
+    _id: id,
     intitule: req.body.intitule,
     dopiece: req.body.dopiece,
     dateDoc: req.body.dateDoc,
     articles: req.body.articles,
     montantHT: req.body.montantHT,
     montantTVA: req.body.montantTVA,
-    remise: req.body.remise,
+    TVA: req.body.TVA,
+    timber: req.body.timber,
     montantTTC: req.body.montantTTC,
     client: req.body.client,
     docCreateur: req.user.data,

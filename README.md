@@ -16,6 +16,23 @@ An application programming interface that adheres to the constraints of REST arc
 
 ![screenshot](screenshot.png)
 
+### Build with
+
+[<img alt="NodeJs" src="https://img.shields.io/badge/node-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">](https://nodejs.org/en/)
+[<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white">](https://www.mongodb.com/)
+
+### Host Platform
+
+[<img alt="Heroku" src="https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white">](https://dashboard.heroku.com/)
+
+### Development Environment
+
+[<img alt="VS Code" src="https://img.shields.io/badge/VS%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white">](https://code.visualstudio.com/)
+
+### Link to API
+
+> [lwm-api.herokuapp.com](https://lwm-api.herokuapp.com)
+
 ## Installation
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. Also you'll need download [MongoDB](https://www.mongodb.com/try/download/community) document-oriented database on your computer.
@@ -94,6 +111,4 @@ Hassen Maoua - Gmail [hassenmaoua07@gmail.com](https://mail.google.com/mail/?vie
 
 ---
 
-> LinkedIn [Hassen Maoua](https://linkedin.com/in/hassen-maoua-215683251) &nbsp;&middot;&nbsp;
-> GitHub [@hassenmaoua](https://github.com/hassenmaoua) &nbsp;&middot;&nbsp;
-> Facebook [@hassen-maoua](https://facebook.com/hassen.maoua)
+[<img alt="LinkedIn" src="https://img.shields.io/twitter/url?color=green&label=Hassen%20Maoua&logo=linkedin&style=social&url=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fhassen-maoua">](https://linkedin.com/in/hassen-maoua) &nbsp;&middot;&nbsp; [<img alt="GitHub" src="https://img.shields.io/twitter/url?label=Hassen%20Maoua&logo=github&style=social&url=https%3A%2F%2Fgithub.com%2Fhassenmaoua">](https://github.com/hassenmaoua) &nbsp;&middot;&nbsp; [<img alt="Facebook" src="https://img.shields.io/twitter/url?label=Hassen%20Maoua&logo=facebook&style=social&url=https%3A%2F%2Ffacebook.com%2Fhassen.maoua">](https://facebook.com/hassen.maoua)
