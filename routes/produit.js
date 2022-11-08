@@ -65,9 +65,8 @@ router.get('/list', auth, async (req, res) => {
 
 router.get('/list-by-client/:client', auth, async (req, res) => {
   const client = Number(req.params['client']);
-  let produitsList;
   try {
-    produitsList = await Produit.find({ client: { _id: client } });
+    const produitsList = await Produit.find({ client: { _id: client } });
     if (produitsList.length > 0) {
       res.status(200).json({
         status: true,
