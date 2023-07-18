@@ -76,6 +76,7 @@ npm install
 Here are the instructions for setting up your project locally..
 To get a local running you may follow these simple steps.
 
+
 1. Install Environment Variables and create `.env` file
 
    ```sh
@@ -85,24 +86,16 @@ To get a local running you may follow these simple steps.
 2. Create this variables inside `.env`
 
    ```sh
-   MONGO_URI=mongodb://127.0.0.1/{Your DataBase Name}
-   API_PORT={Any Number}
-   TOKEN_KEY={Random String}
+   URI=mongodb://127.0.0.1/{Your DataBase Name}
+   PORT={Any Number}
+   JWT_SECRET={Your Secret Key}
+   JWT_REFRESH_SECRET={Your Secret Key}
    ```
 
-3. Inside `package.json` Change `"scripts"` to
-
-   ```json
-    "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon index.js"
-    }
-   ```
-
-4. Start Server Application
+3. Start Server Application
 
    ```sh
-   node index.js
+   npm run dev
    ```
 
 ## License
