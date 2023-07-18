@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+const config = require('./config');
 const { URI } = process.env;
 
 exports.connect = () => {
@@ -11,6 +12,7 @@ exports.connect = () => {
     })
     .then(() => {
       console.log('Successfully connected to database');
+      config.initializeDatabase();
     })
     .catch((error) => {
       console.log('database connection failed. exiting now...');
