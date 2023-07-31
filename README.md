@@ -1,6 +1,6 @@
-# LMW API
+# TFMS API
 
-> A REST API to manage the data of Lathe Mill Workshop
+> A REST API to manage the data of TFMS Solutions
 
 <p align="center">
   <a href="#about-the-project">About The Project</a> •
@@ -14,16 +14,10 @@
 
 An application programming interface that adheres to the constraints of REST architectural style and enables interaction with RESTful web services
 
-![screenshot](screenshot.png)
-
 ### Build with
 
 [<img alt="NodeJs" src="https://img.shields.io/badge/node-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">](https://nodejs.org/en/)
 [<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white">](https://www.mongodb.com/)
-
-### Host Platform
-
-[<img alt="Heroku" src="https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white">](https://dashboard.heroku.com/)
 
 ### Development Environment
 
@@ -42,13 +36,13 @@ From your command line:
 - Clone this repository
 
 ```bash
-git clone https://github.com/hassenmaoua/LMW-API
+git clone https://github.com/hassenmaoua/TFMS-API
 ```
 
 - Go into the repository
 
 ```bash
-cd LMW-API
+cd TFMS-API
 ```
 
 - Install Dependencies and `node_modules`
@@ -76,7 +70,6 @@ npm install
 Here are the instructions for setting up your project locally..
 To get a local running you may follow these simple steps.
 
-
 1. Install Environment Variables and create `.env` file
 
    ```sh
@@ -100,7 +93,7 @@ To get a local running you may follow these simple steps.
 
 ## License
 
-Hassen Maoua - Gmail [hassenmaoua07@gmail.com](https://mail.google.com/mail/?view=cm&fs=1&to=hassenmaoua07@gmail.com&su=About+LMW+API)
+Hassen Maoua - Gmail [hassenmaoua07@gmail.com](https://mail.google.com/mail/?view=cm&fs=1&to=hassenmaoua07@gmail.com&su=About+TFMS+API)
 
 ---
 

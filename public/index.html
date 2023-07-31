@@ -2,30 +2,92 @@
 <html>
   <head>
     <title>TFMS Solutions API Documentation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/atom-one-dark.min.css"
+    />
+
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        line-height: 1.6;
         margin: 0;
         padding: 20px;
+        background-color: #f0f2f5;
       }
 
       h1 {
         text-align: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #1877f2;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        transition: color 0.3s ease;
+      }
+
+      h1:hover {
+        color: #0a4cff;
       }
 
       .api-card {
-        background-color: #f2f2f2;
+        background-color: #fff;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .api-card h2 {
         margin-top: 0;
+        color: #1877f2;
+        font-size: 24px;
       }
 
       .api-card p {
         margin-bottom: 10px;
+        color: #444;
+      }
+
+      /* Hide the API details by default */
+      .api-details {
+        display: none;
+        background-color: #f6f7f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Styling for the expand/collapse link */
+      .expand-link {
+        cursor: pointer;
+        color: #1877f2;
+        transition: color 0.3s ease;
+      }
+
+      .expand-link:hover {
+        color: #0a4cff;
+      }
+
+      pre {
+        background-color: #282c34;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        overflow-x: auto;
+      }
+
+      code {
+        font-family: 'Courier New', monospace;
+        color: #555;
+      }
+
+      .json {
+        display: block;
+        background-color: #282c34;
+        color: #abb2bf;
+        padding: 10px;
+        overflow-x: auto;
       }
     </style>
   </head>
@@ -35,41 +97,234 @@
     <div class="api-card">
       <h2>User API</h2>
       <p>This API provides endpoints for managing users.</p>
-      <p>Documentation: <a href="/api/user-docs">User API Documentation</a></p>
+      <p class="expand-link" onclick="toggleApiDetails('user')">
+        Expand/Collapse
+      </p>
+      <div class="api-details" id="user-details">
+        <h3>Register a User</h3>
+        <pre><code>POST /api/register</code></pre>
+        <h4>Request</h4>
+        <pre><code class="json">{
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "password123"
+    }</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+      "message": "User registered successfully",
+      "user": {
+        "id": "user-id",
+        "name": "John Doe",
+        "email": "john@example.com"
+      }
+    }</code></pre>
+
+        <h3>Login</h3>
+        <pre><code>POST /api/login</code></pre>
+        <h4>Request</h4>
+        <pre><code class="json">{
+      "email": "john@example.com",
+      "password": "password123"
+    }</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+      "message": "Login successful",
+      "token": "authentication-token",
+      "refreshToken": "refresh-token"
+    }</code></pre>
+
+        <h3>Get User Details by Token</h3>
+        <pre><code>GET /api/user</code></pre>
+        <h4>Request Header</h4>
+        <pre><code>Authorization: Bearer &lt;authentication-token&gt;</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+      "user": {
+        "id": "user-id",
+        "name": "John Doe",
+        "email": "john@example.com"
+      }
+    }</code></pre>
+      </div>
     </div>
 
     <div class="api-card">
       <h2>Client API</h2>
       <p>This API provides endpoints for managing clients.</p>
-      <p>
-        Documentation: <a href="/api/client-docs">Client API Documentation</a>
+      <p class="expand-link" onclick="toggleApiDetails('client')">
+        Expand/Collapse
       </p>
+      <div class="api-details" id="client-details">
+        <h3>Get All Clients</h3>
+        <pre><code>GET /api/clients/all</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+    "clients": [
+      {
+        "id": "client-id",
+        "intitule": "Client A",
+        "tax": "12345678",
+        "phone": "123-456-7890",
+        "email": "clientA@example.com",
+        "address": "123 Main St",
+        "avatar": "/uploads/avatar-id.jpg",
+        "nature": "Nature A",
+        "createdBy": "user-id",
+        "createdAt": "2023-07-16T00:00:00.000Z",
+        "updatedAt": "2023-07-16T00:00:00.000Z"
+      },
+      // More clients...
+    ]
+  }</code></pre>
+
+        <h3>Get Clients</h3>
+        <pre><code>GET /api/clients</code></pre>
+        <h4>Query Parameters</h4>
+        <pre><code class="json">{
+    "page": 1,
+    "items_per_page": 12,
+    "search": "",
+    "filter_nature": ""
+  }</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+    "clients": [
+      {
+        "id": "client-id",
+        "intitule": "Client A",
+        "tax": "12345678",
+        "phone": "123-456-7890",
+        "email": "clientA@example.com",
+        "address": "123 Main St",
+        "avatar": "/uploads/avatar-id.jpg",
+        "nature": "Nature A",
+        "createdBy": "user-id",
+        "createdAt": "2023-07-16T00:00:00.000Z",
+        "updatedAt": "2023-07-16T00:00:00.000Z"
+      },
+      // More clients...
+    ]
+  }</code></pre>
+
+        <h3>Get Client by ID</h3>
+        <pre><code>GET /api/clients/:clientId</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+    "id": "client-id",
+    "intitule": "Client A",
+    "tax": "12345678",
+    "phone": "123-456-7890",
+    "email": "clientA@example.com",
+    "address": "123 Main St",
+    "avatar": "/uploads/avatar-id.jpg",
+    "nature": "Nature A",
+    "createdBy": "user-id",
+    "createdAt": "2023-07-16T00:00:00.000Z",
+    "updatedAt": "2023-07-16T00:00:00.000Z"
+  }</code></pre>
+
+        <h3>Create Client</h3>
+        <pre><code>POST /api/clients</code></pre>
+        <h4>Request Body</h4>
+        <pre><code class="json">{
+    "intitule": "Client A",
+    "tax": "12345678",
+    "phone": "123-456-7890",
+    "email": "clientA@example.com",
+    "address": "123 Main St",
+    "nature": "Nature A",
+    "avatar": "(file upload)"
+  }</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+    "id": "client-id",
+    "intitule": "Client A",
+    "tax": "12345678",
+    "phone": "123-456-7890",
+    "email": "clientA@example.com",
+    "address": "123 Main St",
+    "avatar": "/uploads/avatar-id.jpg",
+    "nature": "Nature A",
+    "createdBy": "user-id",
+    "createdAt": "2023-07-16T00:00:00.000Z",
+    "updatedAt": "2023-07-16T00:00:00.000Z"
+  }</code></pre>
+
+        <h3>Update Client</h3>
+        <pre><code>PUT /api/clients/:clientId</code></pre>
+        <h4>Request Body</h4>
+        <pre><code class="json">{
+    "intitule": "Client A (Updated)",
+    "tax": "87654321",
+    "phone": "987-654-3210",
+    "email": "updatedClientA@example.com",
+    "address": "456 Updated St",
+    "nature": "Nature A (Updated)",
+    "avatar": "(file upload)"
+  }</code></pre>
+        <h4>Response</h4>
+        <pre><code class="json">{
+    "id": "client-id",
+    "intitule": "Client A (Updated)",
+    "tax": "87654321",
+    "phone": "987-654-3210",
+    "email": "updatedClientA@example.com",
+    "address": "456 Updated St",
+    "avatar": "/uploads/avatar-id-updated.jpg",
+    "nature": "Nature A (Updated)",
+    "createdBy": "user-id",
+    "createdAt": "2023-07-16T00:00:00.000Z",
+    "updatedAt": "2023-07-16T00:00:00.000Z"
+  }</code></pre>
+      </div>
     </div>
 
     <div class="api-card">
       <h2>Document API</h2>
       <p>This API provides endpoints for managing documents.</p>
-      <p>
-        Documentation:
-        <a href="/api/document-docs">Document API Documentation</a>
+      <p class="expand-link" onclick="toggleApiDetails('document')">
+        Expand/Collapse
       </p>
+      <div class="api-details" id="document-details">
+        <!-- Include endpoints for Document API -->
+      </div>
     </div>
 
     <div class="api-card">
       <h2>Activity API</h2>
       <p>This API provides endpoints for managing activities.</p>
-      <p>
-        Documentation:
-        <a href="/api/activity-docs">Activity API Documentation</a>
+      <p class="expand-link" onclick="toggleApiDetails('activity')">
+        Expand/Collapse
       </p>
+      <div class="api-details" id="activity-details">
+        <!-- Include endpoints for Activity API -->
+      </div>
     </div>
 
     <div class="api-card">
       <h2>State API</h2>
       <p>This API provides endpoints for managing states.</p>
-      <p>
-        Documentation: <a href="/api/state-docs">State API Documentation</a>
+      <p class="expand-link" onclick="toggleApiDetails('state')">
+        Expand/Collapse
       </p>
+      <div class="api-details" id="state-details">
+        <!-- Include endpoints for State API -->
+      </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('pre code').forEach(function (block) {
+          hljs.highlightBlock(block);
+        });
+      });
+
+      function toggleApiDetails(apiName) {
+        const apiDetailsElement = document.getElementById(`${apiName}-details`);
+        apiDetailsElement.style.display =
+          apiDetailsElement.style.display === 'none' ? 'block' : 'none';
+      }
+    </script>
   </body>
 </html>

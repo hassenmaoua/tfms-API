@@ -4,6 +4,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
+
+require('dotenv').config();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -36,6 +38,6 @@ app.use('/api/states', stateRoutes);
 
 app.listen(port, () => {
   console.log(
-    `You can use lathe-mill-workshop API in your APP.\nhttp://localhost:${port}\n`
+    `You can use TFMS-Solutions API in your APP.\nhttp://localhost:${port}\n`
   );
 });

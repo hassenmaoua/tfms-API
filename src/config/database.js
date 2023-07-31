@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('./config');
+require('dotenv').config();
 const { URI } = process.env;
 
 exports.connect = () => {
