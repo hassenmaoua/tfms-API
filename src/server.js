@@ -33,6 +33,9 @@ app.use('/api/activities', activityRoutes);
 const clientRoutes = require('./routes/clientRoutes');
 app.use('/api/clients', clientRoutes);
 
+const documentRoutes = require('./routes/documentRoutes');
+app.use('/api/documents', documentRoutes);
+
 const stateRoutes = require('./routes/stateRoutes');
 app.use('/api/states', stateRoutes);
 

@@ -70,6 +70,13 @@ const createClient = async (req, res) => {
       const avatarFileName = `${uuidv4()}.${fileExtension}`;
       avatarPath = `/uploads/${avatarFileName}`; // Set the avatar path
 
+      // Create the folder if it doesn't exist
+      const folderPath =
+        '.' + avatarPath.substring(0, avatarPath.lastIndexOf('/'));
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+      }
+
       // Move the uploaded file to the desired destination
       fs.writeFileSync(`.${avatarPath}`, fs.readFileSync(tempFilePath));
     }
@@ -109,15 +116,22 @@ const updateClient = async (req, res) => {
     let avatarPath = client.avatar;
     if (req.file) {
       // Remove the old avatar file
-      if (avatarPath) {
-        fs.unlinkSync(`.${avatarPath}`);
-      }
+      // if (avatarPath) {
+      //   fs.unlinkSync(`.${avatarPath}`);
+      // }
 
       // Retrieve the temporary path of the uploaded file
       const tempFilePath = req.file.path;
       const fileExtension = req.file.originalname.split('.').pop();
       const avatarFileName = `${uuidv4()}.${fileExtension}`;
       avatarPath = `/uploads/${avatarFileName}`; // Set the new avatar path
+
+      // Create the folder if it doesn't exist
+      const folderPath =
+        '.' + avatarPath.substring(0, avatarPath.lastIndexOf('/'));
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+      }
 
       // Move the uploaded file to the desired destination
       fs.writeFileSync(`.${avatarPath}`, fs.readFileSync(tempFilePath));
